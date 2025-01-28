@@ -36,4 +36,16 @@ Describe "Test Open Excel Package" -Tag Open-ExcelPackage {
 
         { Open-ExcelPackage -Path $xlFilename -ErrorAction Stop } | Should -Not -Throw
     }
+    It "Should open a workbook via file" {
+        $xlFilename = "$PSScriptRoot\testImportExcel.xlsx"
+
+        { Open-ExcelPackage -Path $xlFilename -ErrorAction Stop } | Should -Not -Throw
+    }
+    It "Should open a workbook via stream" {
+        $xlFilename = "$PSScriptRoot\testImportExcel.xlsx"
+        $stream = [System.IO.File]::Open($xlFilename, [System.IO.FileMode]::Open)
+        { Open-ExcelPackage -Stream $stream } | Should -Not -Throw
+        { Open-ExcelPackage -Stream $stream | Close-ExcelPackage } | Should -Not -Throw
+    }
+    
 }

@@ -1,18 +1,18 @@
 function Close-ExcelPackage {
-    [CmdLetBinding()]
-    [Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
-    param (
-        [parameter(Mandatory = $true, ValueFromPipeline = $true)]
-        [OfficeOpenXml.ExcelPackage]$ExcelPackage,
-        [Switch]$Show,
-        [Switch]$NoSave,
-        $SaveAs,
-        [ValidateNotNullOrEmpty()]
-        [String]$Password,
-        [Switch]$Calculate,
-        [Switch]$ReZip
-    )
-
+[CmdLetBinding()]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("PSAvoidUsingPlainTextForPassword", "")]
+param (
+    [parameter(Mandatory = $true, ValueFromPipeline = $true)]
+    [OfficeOpenXml.ExcelPackage]$ExcelPackage,
+    [Switch]$Show,
+    [Switch]$NoSave,
+    $SaveAs,
+    [ValidateNotNullOrEmpty()]
+    [String]$Password,
+    [Switch]$Calculate,
+    [Switch]$ReZip
+)
+Process {
     if ( $NoSave) { $ExcelPackage.Dispose() }
     else {
         if ($Calculate) {
@@ -33,6 +33,7 @@ function Close-ExcelPackage {
             Invoke-ExcelReZipFile -ExcelPackage $ExcelPackage
         }
         $ExcelPackage.Dispose()
-        if ($Show) { Start-Process -FilePath $SaveAs }
+        if ($Show -and ($ExcelPackage.File -or $SaveAs)) { Start-Process -FilePath $SaveAs }
     }
+}
 }
